@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Necessary libraries.
 
 library(tidyverse)
+library(cowplot)
 
 # Load in the data.
 
@@ -63,9 +64,9 @@ graph2
 
 graph3 <- mth %>% 
   count(t_id, t_gender_binary) %>% 
-  ggplot(aes(x=t_gender_binary)) + geom_bar() +
+  ggplot(aes(x=t_gender_binary)) + geom_bar(position = position_dodge(width = .9)) +
   ylab("Frequency") +
-  xlab("Female          Male") +
+  xlab("Female : Male") +
   ggtitle("Target Sex") + 
   scale_x_discrete() + 
   scale_y_continuous(breaks = seq(0,10, by = 5))
@@ -76,11 +77,18 @@ graph4 <- mth %>%
   count(e_id, e_gender_binary) %>% 
   ggplot(aes(x=e_gender_binary)) + geom_bar() +
   ylab("Frequency") +
-  xlab("Female          Male") +
+  xlab("Female : Male") +
   ggtitle("Evaluator Sex") + 
   scale_x_discrete() + 
   scale_y_continuous(breaks = seq(0,80, by = 10))
 
 graph4
+
+graphs <- plot_grid(graph1, graph2, graph3, graph4)
+```
+
+
+```{r, echo=FALSE}
+graphs
 ```
 
