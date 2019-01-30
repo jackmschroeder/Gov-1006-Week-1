@@ -1,0 +1,21 @@
+---
+title: "Replicate"
+author: "Jack Schroeder"
+date: "1/30/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+
+load("AJPSReplication.RData")
+
+x <- x %>% 
+  mutate(ideoBinary = case_when(politicalIdeo >= 4 ~ "Conservative",
+                                TRUE ~ "Liberal"))
+
+x
+```
+
