@@ -8,14 +8,26 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
+# Necessary libraries.
+
 library(tidyverse)
+
+# Load in the data.
 
 load("AJPSReplication.RData")
 
-x <- x %>% 
+orig <- x
+
+# It is called x. 
+
+mth <- orig %>% 
+  as_tibble() %>% 
+  
+#Mutate a new binary for ideology using case_when.
+  
   mutate(ideoBinary = case_when(politicalIdeo >= 4 ~ "Conservative",
                                 TRUE ~ "Liberal"))
 
-x
+mth
 ```
 
