@@ -1,5 +1,5 @@
 ---
-title: "Replicate"
+title: "McDermott, et al (2014)"
 author: "Jack Schroeder"
 date: "1/30/2019"
 output: html_document
@@ -22,12 +22,65 @@ orig <- x
 
 mth <- orig %>% 
   as_tibble() %>% 
-  
-#Mutate a new binary for ideology using case_when.
-  
-  mutate(ideoBinary = case_when(politicalIdeo >= 4 ~ "Conservative",
-                                TRUE ~ "Liberal"))
+  rename(t_id = type_n,
+         e_id = ideval_n,
+         e_gender = Male,
+         t_gender = MaleTarget,
+         e_ideo = politicalIdeo,
+         t_ideo = IdeoTarget,
+         i_gender = MaleMaleTarget,
+         i_ideo = ConservConservTarget_contBoth,
+         t_attractive_mean = mn_attractive,
+         t_attractive = attractive) %>% 
+  mutate(e_ideo_binary = case_when(e_ideo >= 4 ~ "Conservative",
+                                TRUE ~ "Liberal")) %>% 
+  mutate(t_ideo_binary = if_else(t_ideo >= 4, "Conservative", "Liberal")) %>% 
+  mutate(t_gender_binary = if_else(t_gender == "Female", 0, 1)) %>% 
+  mutate(e_gender_binary = if_else(e_gender == "Female", 0, 1)) %>% 
+  mutate(same_gender = (e_gender == t_gender),
+         same_ideo = (e_ideo == t_ideo))
 
-mth
+graph1 <- mth %>% 
+  count(t_id, t_ideo) %>% 
+  ggplot(aes(x=t_ideo)) + geom_bar() +
+  ylab("Frequency") +
+  xlab("Liberal : Conservative") +
+  ggtitle("Target Ideology") +
+  scale_x_continuous(breaks = seq(1, 7, by = 1)) +
+  scale_y_continuous(breaks = seq(0, 8, by = 2))
+
+graph1
+
+graph2 <- mth %>% 
+  count(e_id, e_ideo) %>% 
+  ggplot(aes(x=e_ideo)) + geom_bar() +   
+  ylab("Frequency") +
+  xlab("Liberal : Conservative") +
+  ggtitle("Evaluator Ideology") + 
+  scale_x_continuous(breaks = seq(1, 7, by = 1))
+
+graph2
+
+graph3 <- mth %>% 
+  count(t_id, t_gender_binary) %>% 
+  ggplot(aes(x=t_gender_binary)) + geom_bar() +
+  ylab("Frequency") +
+  xlab("Female          Male") +
+  ggtitle("Target Sex") + 
+  scale_x_discrete() + 
+  scale_y_continuous(breaks = seq(0,10, by = 5))
+
+graph3
+
+graph4 <- mth %>% 
+  count(e_id, e_gender_binary) %>% 
+  ggplot(aes(x=e_gender_binary)) + geom_bar() +
+  ylab("Frequency") +
+  xlab("Female          Male") +
+  ggtitle("Evaluator Sex") + 
+  scale_x_discrete() + 
+  scale_y_continuous(breaks = seq(0,80, by = 10))
+
+graph4
 ```
 
